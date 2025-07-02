@@ -3,6 +3,7 @@ const {
   parseMoney,
   convertRate,
   formatPeriod,
+  validateFinancialParams,
 } = require("./utils");
 
 class FinancingCalc {
@@ -11,6 +12,11 @@ class FinancingCalc {
   /* ========================== */
 
   financingSAC(valor, taxaAnual, anos) {
+    const validation = validateFinancialParams(valor, taxaAnual, anos);
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
     const parcelas = anos * 12;
     const taxaMensal = convertRate(taxaAnual, "anual", "mensal");
     const amortizacao = valor / parcelas;
@@ -63,6 +69,11 @@ class FinancingCalc {
   }
 
   financingPrice(valor, taxaAnual, anos) {
+    const validation = validateFinancialParams(valor, taxaAnual, anos);
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
     const parcelas = anos * 12;
     const taxaMensal = convertRate(taxaAnual, "anual", "mensal") / 100;
 
@@ -121,6 +132,11 @@ class FinancingCalc {
   /* ============================== */
 
   compareFinancing(valor, taxaAnual, anos) {
+    const validation = validateFinancialParams(valor, taxaAnual, anos);
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
     const sac = this.financingSAC(valor, taxaAnual, anos);
     const price = this.financingPrice(valor, taxaAnual, anos);
 
