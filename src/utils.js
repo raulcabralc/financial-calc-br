@@ -76,6 +76,20 @@ function calcPercentDifference(valor1, valor2) {
   return ((valor1 - valor2) / valor2) * 100;
 }
 
+function compoundInterest(capital, taxaAnual, anos) {
+  const parcelas = anos * 12;
+  const taxaMensal = convertRate(taxaAnual, "anual", "mensal");
+
+  const montante = capital * Math.pow(1 + taxaMensal / 100, parcelas);
+  return {
+    capital: capital,
+    taxa: taxaMensal,
+    periodo: formatPeriod(anos),
+    montante: Math.round(montante * 100) / 100,
+    juros: Math.round((montante - capital) * 100) / 100,
+  };
+}
+
 module.exports = {
   formatMoney,
   parseMoney,
@@ -85,4 +99,5 @@ module.exports = {
   validateFinancialParams,
   formatPeriod,
   calcPercentDifference,
+  compoundInterest,
 };
