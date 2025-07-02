@@ -195,6 +195,30 @@ class FinancingCalc {
       };
     }
   }
+
+  /* =================================== */
+  /*    SIMULAÇÃO DE UM FINANCIAMENTO    */
+  /* =================================== */
+
+  simulateDownPayment(valorImovel, entrada, taxaAnual, anos) {
+    const valorFinanciado = valorImovel - entrada;
+    const result = this.compareFinancing(valorFinanciado, taxaAnual, anos);
+
+    return {
+      entrada: formatMoney(entrada),
+      entradaPercentual: `${((entrada / valorImovel) * 100).toFixed(0)}%`,
+      valorFinanciado: formatMoney(valorFinanciado),
+      sac: {
+        primeira: result.sac.primeira,
+        ultima: result.sac.ultima,
+        totalJuros: result.sac.totalJuros,
+      },
+      price: {
+        parcela: result.price.parcelaFixa,
+        totalJuros: result.price.totalJuros,
+      },
+    };
+  }
 }
 
 module.exports = FinancingCalc;
