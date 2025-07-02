@@ -39,7 +39,7 @@ function validateFinancialParams(valor, taxa, tempo) {
   }
 
   if (!isValidNumber(taxa) || taxa < 0) {
-    errors.push("Taxa deve ser um número positivo");
+    errors.push("Taxa deve ser um número positivo ou zero");
   }
 
   if (!isValidNumber(tempo) || tempo <= 0) {
