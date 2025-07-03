@@ -1,6 +1,40 @@
-const https = require("https");
+import * as https from "https";
+
+interface Rates {
+  selic: number;
+  cdi: number;
+  ipca: number;
+  dolar: number;
+  poupanca: number;
+}
+
+interface FormattedRates {
+  selic: string;
+  cdi: string;
+  poupanca: string;
+  dolar: string;
+  ipca: string;
+}
+
+interface AllRates extends Rates {
+  formatted: FormattedRates;
+}
+
+interface SelicApiResponse {
+  data: string;
+  valor: string;
+}
+
+interface DolarApiResponse {
+  rates: {
+    BRL: number;
+    [key: string]: number;
+  };
+}
 
 class RatesManager {
+  private rates: Rates;
+
   constructor() {
     this.rates = {
       selic: 10.75,
@@ -8,11 +42,10 @@ class RatesManager {
       ipca: 4.5,
       dolar: 5.2,
       poupanca: 0.5,
-      lastUpdate: null,
     };
   }
 
-  async updateAll() {
+  async updateAll(): Promise<Rates> {
     try {
       const selic = await this.fetchSelic();
       if (selic) {
@@ -28,17 +61,15 @@ class RatesManager {
 
       this.updateSavingsRule();
 
-      this.rates.lastUpdate = new Date();
-
       return this.rates;
     } catch (error) {
       return this.rates;
     }
   }
 
-  async fetchSelic() {
+  private async fetchSelic(): Promise<number | null> {
     return new Promise((resolve) => {
-      const options = {
+      const options: https.RequestOptions = {
         hostname: "api.bcb.gov.br",
         path: "/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json",
         method: "GET",
@@ -50,7 +81,7 @@ class RatesManager {
         res.on("data", (chunk) => (data += chunk));
         res.on("end", () => {
           try {
-            const json = JSON.parse(data);
+            const json: SelicApiResponse[] = JSON.parse(data);
             const valor = parseFloat(json[0]?.valor);
             resolve(valor || null);
           } catch {
@@ -69,9 +100,9 @@ class RatesManager {
     });
   }
 
-  async fetchDolar() {
+  private async fetchDolar(): Promise<number | null> {
     return new Promise((resolve) => {
-      const options = {
+      const options: https.RequestOptions = {
         hostname: "api.exchangerate-api.com",
         path: "/v4/latest/USD",
         method: "GET",
@@ -83,7 +114,7 @@ class RatesManager {
         res.on("data", (chunk) => (data += chunk));
         res.on("end", () => {
           try {
-            const json = JSON.parse(data);
+            const json: DolarApiResponse = JSON.parse(data);
             const valor = json.rates?.BRL;
             resolve(valor || null);
           } catch {
@@ -102,7 +133,7 @@ class RatesManager {
     });
   }
 
-  updateSavingsRule() {
+  private updateSavingsRule(): void {
     if (this.rates.selic <= 8.5) {
       this.rates.poupanca = (this.rates.selic / 12) * 0.7;
     } else {
@@ -110,23 +141,27 @@ class RatesManager {
     }
   }
 
-  getSelic() {
+  getSelic(): number {
     return this.rates.selic;
   }
-  getCDI() {
+
+  getCDI(): number {
     return this.rates.cdi;
   }
-  getDolar() {
+
+  getDolar(): number {
     return this.rates.dolar;
   }
-  getPoupanca() {
+
+  getPoupanca(): number {
     return this.rates.poupanca;
   }
-  getIPCA() {
+
+  getIPCA(): number {
     return this.rates.ipca;
   }
 
-  getAllRates() {
+  getAllRates(): AllRates {
     return {
       ...this.rates,
       formatted: {
@@ -135,10 +170,9 @@ class RatesManager {
         poupanca: `${this.rates.poupanca.toFixed(2)}% a.m.`,
         dolar: `R$ ${this.rates.dolar.toFixed(2)}`,
         ipca: `${this.rates.ipca}% a.a.`,
-        lastUpdate: this.rates.lastUpdate?.toLocaleString("pt-BR"),
       },
     };
   }
 }
 
-module.exports = RatesManager;
+export default RatesManager;
