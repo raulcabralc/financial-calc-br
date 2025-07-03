@@ -1,0 +1,416 @@
+import {
+  formatMoney,
+  parseMoney,
+  convertRate,
+  calcIRRate,
+  validateFinancialParams,
+  formatPeriod,
+} from "./utils";
+
+import RatesManager from "./rates";
+
+/* ============== */
+/*   INTERFACES   */
+/* ============== */
+
+interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+interface TaxasUtilizadas {
+  selic: string;
+  cdi: string;
+  poupanca: string;
+  atualizadoEm: string;
+}
+
+interface ResultadoPoupanca {
+  investimento: "Poupança";
+  valorInicial: string;
+  periodo: string;
+  taxaMensal: string;
+  montanteFinal: string;
+  rendimento: string;
+  rentabilidade: string;
+  isento: true;
+  observacao: string;
+}
+
+interface ResultadoTesouroSelic {
+  investimento: "Tesouro Selic";
+  valorInicial: string;
+  periodo: string;
+  taxaAnual: string;
+  montanteBruto: string;
+  impostoRenda: string;
+  aliquotaIR: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidade: string;
+  observacao: string;
+}
+
+interface ResultadoCDB {
+  investimento: string;
+  valorInicial: string;
+  periodo: string;
+  taxaAnual: string;
+  percentualCDI: string;
+  montanteBruto: string;
+  impostoRenda: string;
+  aliquotaIR: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidade: string;
+}
+
+interface OpcaoInvestimento {
+  nome: string;
+  rendimento: number;
+  rentabilidade: string;
+}
+
+interface OpcaoComparacao {
+  nome: string;
+  rendimento: string;
+  rentabilidade: string;
+}
+
+interface CenarioComparacao {
+  valor: string;
+  periodo: string;
+  dataAnalise: string;
+}
+
+interface OpcoesComparacao {
+  poupanca: {
+    rendimento: string;
+    rentabilidade: string;
+  };
+  tesouroSelic: {
+    rendimento: string;
+    rentabilidade: string;
+  };
+  cdbs: OpcaoComparacao[];
+}
+
+interface MelhorOpcao {
+  nome: string;
+  rendimento: string;
+  rentabilidade: string;
+  vantagem: string;
+}
+
+interface ResultadoComparacao {
+  cenario: CenarioComparacao;
+  opcoes: OpcoesComparacao;
+  ranking: OpcaoInvestimento[];
+  melhorOpcao: MelhorOpcao;
+  taxasUtilizadas: TaxasUtilizadas;
+}
+
+interface EvolucaoMensal {
+  mes: number;
+  montante: string;
+  totalAportado: string;
+  rendimento: string;
+}
+
+interface SimulacaoAportes {
+  simulacao: "Aportes Mensais";
+  valorInicial: string;
+  aporteMensal: string;
+  periodo: string;
+  taxaAnual: string;
+  totalAportado: string;
+  montanteBruto: string;
+  rendimentoBruto: string;
+  impostoRenda: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidadeTotal: string;
+  evolucao: EvolucaoMensal[];
+}
+
+class InvestmentCalc {
+  private rates: RatesManager;
+
+  constructor() {
+    this.rates = new RatesManager();
+  }
+
+  /* ============== */
+  /*    POUPANÇA    */
+  /* ============== */
+
+  investmentPoupanca(valor: number, meses: number): ResultadoPoupanca {
+    const validation: ValidationResult = validateFinancialParams(
+      valor,
+      this.rates.getPoupanca(),
+      meses
+    );
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
+    const taxaMensal: number = this.rates.getPoupanca() / 100;
+    const montante: number = valor * Math.pow(1 + taxaMensal, meses);
+    const rendimento: number = montante - valor;
+
+    return {
+      investimento: "Poupança",
+      valorInicial: formatMoney(valor),
+      periodo: formatPeriod(meses),
+      taxaMensal: `${this.rates.getPoupanca().toFixed(2)}%`,
+      montanteFinal: formatMoney(montante),
+      rendimento: formatMoney(rendimento),
+      rentabilidade: `${((rendimento / valor) * 100).toFixed(2)}%`,
+      isento: true,
+      observacao: "Isento de Imposto de Renda e IOF",
+    };
+  }
+
+  /* =================== */
+  /*    TESOURO SELIC    */
+  /* =================== */
+
+  investmentTesouroSelic(valor: number, meses: number): ResultadoTesouroSelic {
+    const validation: ValidationResult = validateFinancialParams(
+      valor,
+      this.rates.getSelic(),
+      meses
+    );
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
+    const taxaMensal: number =
+      convertRate(this.rates.getSelic(), "anual", "mensal") / 100;
+    const montanteBruto: number = valor * Math.pow(1 + taxaMensal, meses);
+    const rendimentoBruto: number = montanteBruto - valor;
+
+    const dias: number = meses * 30;
+    const aliquotaIR: number = calcIRRate(dias);
+    const ir: number = rendimentoBruto * (aliquotaIR / 100);
+    const rendimentoLiquido: number = rendimentoBruto - ir;
+
+    return {
+      investimento: "Tesouro Selic",
+      valorInicial: formatMoney(valor),
+      periodo: formatPeriod(meses),
+      taxaAnual: `${this.rates.getSelic()}%`,
+      montanteBruto: formatMoney(montanteBruto),
+      impostoRenda: formatMoney(ir),
+      aliquotaIR: `${aliquotaIR}%`,
+      montanteLiquido: formatMoney(valor + rendimentoLiquido),
+      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+      observacao: `Tributação regressiva: ${aliquotaIR}% de IR após ${Math.floor(
+        dias
+      )} dias`,
+    };
+  }
+
+  /* ========= */
+  /*    CDB    */
+  /* ========= */
+
+  investmentCDB(
+    valor: number,
+    meses: number,
+    percentualCDI: number = 100
+  ): ResultadoCDB {
+    const validation: ValidationResult = validateFinancialParams(
+      valor,
+      percentualCDI,
+      meses
+    );
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
+    const taxaCDI: number = this.rates.getCDI() * (percentualCDI / 100);
+    const taxaMensal: number = convertRate(taxaCDI, "anual", "mensal") / 100;
+    const montanteBruto: number = valor * Math.pow(1 + taxaMensal, meses);
+    const rendimentoBruto: number = montanteBruto - valor;
+
+    const dias: number = meses * 30;
+    const aliquotaIR: number = calcIRRate(dias);
+    const ir: number = rendimentoBruto * (aliquotaIR / 100);
+    const rendimentoLiquido: number = rendimentoBruto - ir;
+
+    return {
+      investimento: `CDB ${percentualCDI}% CDI`,
+      valorInicial: formatMoney(valor),
+      periodo: formatPeriod(meses),
+      taxaAnual: `${taxaCDI.toFixed(2)}%`,
+      percentualCDI: `${percentualCDI}%`,
+      montanteBruto: formatMoney(montanteBruto),
+      impostoRenda: formatMoney(ir),
+      aliquotaIR: `${aliquotaIR}%`,
+      montanteLiquido: formatMoney(valor + rendimentoLiquido),
+      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+    };
+  }
+
+  /* ============================== */
+  /*    COMPARA OS INVESTIMENTOS    */
+  /* ============================== */
+
+  compareInvestments(
+    valor: number,
+    meses: number,
+    opcoes: number[] = [100, 110, 120]
+  ): ResultadoComparacao {
+    const poupanca: ResultadoPoupanca = this.investmentPoupanca(valor, meses);
+    const selic: ResultadoTesouroSelic = this.investmentTesouroSelic(
+      valor,
+      meses
+    );
+    const cdbs: ResultadoCDB[] = opcoes.map((perc) =>
+      this.investmentCDB(valor, meses, perc)
+    );
+
+    const rendPoupanca: number = parseMoney(poupanca.rendimento);
+    const rendSelic: number = parseMoney(selic.rendimentoLiquido);
+    const rendCDBs: OpcaoInvestimento[] = cdbs.map((cdb) => ({
+      nome: cdb.investimento,
+      rendimento: parseMoney(cdb.rendimentoLiquido),
+      rentabilidade: cdb.rentabilidade,
+    }));
+
+    const todasOpcoes: OpcaoInvestimento[] = [
+      {
+        nome: "Poupança",
+        rendimento: rendPoupanca,
+        rentabilidade: poupanca.rentabilidade,
+      },
+      {
+        nome: "Tesouro Selic",
+        rendimento: rendSelic,
+        rentabilidade: selic.rentabilidade,
+      },
+      ...rendCDBs,
+    ];
+
+    const melhorOpcao: OpcaoInvestimento = todasOpcoes.reduce((melhor, atual) =>
+      atual.rendimento > melhor.rendimento ? atual : melhor
+    );
+
+    return {
+      cenario: {
+        valor: formatMoney(valor),
+        periodo: formatPeriod(meses),
+        dataAnalise: new Date().toLocaleDateString("pt-BR"),
+      },
+      opcoes: {
+        poupanca: {
+          rendimento: poupanca.rendimento,
+          rentabilidade: poupanca.rentabilidade,
+        },
+        tesouroSelic: {
+          rendimento: selic.rendimentoLiquido,
+          rentabilidade: selic.rentabilidade,
+        },
+        cdbs: cdbs.map((cdb) => ({
+          nome: cdb.investimento,
+          rendimento: cdb.rendimentoLiquido,
+          rentabilidade: cdb.rentabilidade,
+        })),
+      },
+      ranking: todasOpcoes.sort((a, b) => b.rendimento - a.rendimento),
+      melhorOpcao: {
+        nome: melhorOpcao.nome,
+        rendimento: formatMoney(melhorOpcao.rendimento),
+        rentabilidade: melhorOpcao.rentabilidade,
+        vantagem: formatMoney(
+          melhorOpcao.rendimento -
+            Math.min(...todasOpcoes.map((option) => option.rendimento))
+        ),
+      },
+      taxasUtilizadas: {
+        selic: this.rates.getAllRates().formatted.selic,
+        cdi: this.rates.getAllRates().formatted.cdi,
+        poupanca: this.rates.getAllRates().formatted.poupanca,
+        atualizadoEm: new Date().toLocaleDateString("pt-BR"),
+      },
+    };
+  }
+
+  /* ================================== */
+  /*    SIMULAÇÃO DE APORTES MENSAIS    */
+  /* ================================== */
+
+  simulateMonthlyContributions(
+    valorInicial: number,
+    aporteMensal: number,
+    meses: number,
+    taxaAnual: number,
+    temIR: boolean = true
+  ): SimulacaoAportes {
+    const validation: ValidationResult = validateFinancialParams(
+      valorInicial,
+      taxaAnual,
+      meses
+    );
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
+    const taxaMensal: number = convertRate(taxaAnual, "anual", "mensal") / 100;
+    let montante: number = valorInicial;
+    let totalAportado: number = valorInicial;
+    const evolucao: EvolucaoMensal[] = [];
+
+    for (let mes = 1; mes <= meses; mes++) {
+      montante = montante * (1 + taxaMensal);
+
+      if (mes <= meses) {
+        montante += aporteMensal;
+        totalAportado += aporteMensal;
+      }
+
+      if (mes <= 12 || mes % 12 === 0 || mes === meses) {
+        evolucao.push({
+          mes: mes,
+          montante: formatMoney(montante),
+          totalAportado: formatMoney(totalAportado),
+          rendimento: formatMoney(montante - totalAportado),
+        });
+      }
+    }
+
+    const rendimentoBruto: number = montante - totalAportado;
+    let rendimentoLiquido: number = rendimentoBruto;
+    let ir: number = 0;
+
+    if (temIR) {
+      const aliquotaIR: number = calcIRRate(meses * 30);
+      ir = rendimentoBruto * (aliquotaIR / 100);
+      rendimentoLiquido -= ir;
+    }
+
+    return {
+      simulacao: "Aportes Mensais",
+      valorInicial: formatMoney(valorInicial),
+      aporteMensal: formatMoney(aporteMensal),
+      periodo: formatPeriod(meses),
+      taxaAnual: `${taxaAnual}%`,
+      totalAportado: formatMoney(totalAportado),
+      montanteBruto: formatMoney(montante),
+      rendimentoBruto: formatMoney(rendimentoBruto),
+      impostoRenda: temIR ? formatMoney(ir) : "Isento",
+      montanteLiquido: formatMoney(montante - (temIR ? ir : 0)),
+      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      rentabilidadeTotal: `${(
+        (rendimentoLiquido / totalAportado) *
+        100
+      ).toFixed(2)}%`,
+      evolucao: evolucao,
+    };
+  }
+}
+
+export default InvestmentCalc;
