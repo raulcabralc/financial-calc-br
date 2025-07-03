@@ -117,7 +117,7 @@ function compoundInterest(
   };
 }
 
-module.exports = {
+export {
   formatMoney,
   parseMoney,
   convertRate,
