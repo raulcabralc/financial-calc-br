@@ -1,16 +1,35 @@
-function formatMoney(valor) {
+interface ValidationResult {
+  isValid: boolean;
+  errors: string[];
+}
+
+interface CompoundInterestResult {
+  capital: number;
+  taxa: number;
+  periodo: string;
+  montante: number;
+  juros: number;
+}
+
+type RateConversion = "anual" | "mensal";
+
+function formatMoney(valor: number): string {
   return new Intl.NumberFormat("pt-BR", {
     style: "currency",
     currency: "BRL",
   }).format(valor);
 }
 
-function parseMoney(valor) {
+function parseMoney(valor: number | string): number {
   if (typeof valor === "number") return valor;
   return parseFloat(valor.replace(/[R$\.\s]/g, "").replace(",", "."));
 }
 
-function convertRate(taxa, de, para) {
+function convertRate(
+  taxa: number,
+  de: RateConversion,
+  para: RateConversion
+): number {
   if (de === "anual" && para === "mensal") {
     return (Math.pow(1 + taxa / 100, 1 / 12) - 1) * 100;
   }
@@ -20,19 +39,23 @@ function convertRate(taxa, de, para) {
   return taxa;
 }
 
-function calcIRRate(dias) {
+function calcIRRate(dias: number): number {
   if (dias <= 180) return 22.5;
   if (dias <= 360) return 20;
   if (dias <= 720) return 17.5;
   return 15;
 }
 
-function isValidNumber(valor) {
+function isValidNumber(valor: any): valor is number {
   return typeof valor === "number" && !isNaN(valor) && isFinite(valor);
 }
 
-function validateFinancialParams(valor, taxa, tempo) {
-  const errors = [];
+function validateFinancialParams(
+  valor: number,
+  taxa: number,
+  tempo: number
+): ValidationResult {
+  const errors: string[] = [];
 
   if (!isValidNumber(valor) || valor <= 0) {
     errors.push("Valor deve ser um número positivo");
@@ -52,7 +75,7 @@ function validateFinancialParams(valor, taxa, tempo) {
   };
 }
 
-function formatPeriod(meses) {
+function formatPeriod(meses: number): string {
   if (meses < 12) {
     return `${meses} ${meses === 1 ? "mês" : "meses"}`;
   }
@@ -71,12 +94,16 @@ function formatPeriod(meses) {
   return resultado;
 }
 
-function calcPercentDifference(valor1, valor2) {
+function calcPercentDifference(valor1: number, valor2: number): number {
   if (valor2 === 0) return 0;
   return ((valor1 - valor2) / valor2) * 100;
 }
 
-function compoundInterest(capital, taxaAnual, anos) {
+function compoundInterest(
+  capital: number,
+  taxaAnual: number,
+  anos: number
+): CompoundInterestResult {
   const parcelas = anos * 12;
   const taxaMensal = convertRate(taxaAnual, "anual", "mensal");
 
