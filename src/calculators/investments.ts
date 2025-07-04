@@ -1,5 +1,4 @@
 import {
-  formatMoney,
   parseMoney,
   convertRate,
   calcIRRate,
@@ -188,7 +187,7 @@ class InvestmentCalc {
 
     return {
       cenario: {
-        valor: formatMoney(valor),
+        valor: valor,
         periodo: formatPeriod(meses),
         dataAnalise: new Date().toLocaleDateString("pt-BR"),
       },

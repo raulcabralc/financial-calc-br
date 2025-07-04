@@ -194,7 +194,7 @@ export interface OpcaoComparacao {
 }
 
 export interface CenarioComparacao {
-  valor: string;
+  valor: number;
   periodo: string;
   dataAnalise: string;
 }
