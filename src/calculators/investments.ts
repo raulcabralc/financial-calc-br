@@ -49,7 +49,7 @@ class InvestmentCalc {
       investimento: "Poupança",
       valorInicial: valor,
       periodo: meses,
-      taxaMensal: taxaMensal,
+      taxaMensal: this.rates.getPoupanca() / 100,
       montanteFinal: montante,
       rendimento: rendimento,
       rentabilidade: rendimento / valor,
