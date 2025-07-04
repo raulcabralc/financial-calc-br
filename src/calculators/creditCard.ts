@@ -1,4 +1,4 @@
-import {} from "../utils/utils";
+import { formatMoney } from "../utils/utils";
 import { creditCardPaga, creditCard } from "../types/types";
 
 class creditCardCalc {
@@ -29,6 +29,16 @@ class creditCardCalc {
       custoTotal: custoTotal,
       proximaFatura: valorRotativo + custoTotal,
       alerta: custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK",
+      formatted: {
+        valorFatura: formatMoney(valorFatura),
+        valorPago: formatMoney(valorPago),
+        valorRotativo: formatMoney(valorRotativo),
+        juros: formatMoney(juros),
+        iof: formatMoney(iof),
+        custoTotal: formatMoney(custoTotal),
+        proximaFatura: formatMoney(valorRotativo + custoTotal),
+        alerta: custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK",
+      },
     };
   }
 }

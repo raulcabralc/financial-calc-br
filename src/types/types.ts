@@ -8,6 +8,17 @@ export interface creditCardPaga {
   custoTotal: number;
 }
 
+interface creditCardFormatted {
+  valorFatura: string;
+  valorPago: string;
+  valorRotativo: string;
+  juros: string;
+  iof: string;
+  custoTotal: string;
+  proximaFatura: string;
+  alerta: string;
+}
+
 export interface creditCard {
   valorFatura: number;
   valorPago: number;
@@ -17,6 +28,7 @@ export interface creditCard {
   custoTotal: number;
   proximaFatura: number;
   alerta: string;
+  formatted: creditCardFormatted;
 }
 
 /* =================== */
