@@ -9,13 +9,13 @@ export interface creditCardPaga {
 }
 
 export interface creditCard {
-  valorFatura: string;
-  valorPago: string;
-  valorRotativo: string;
-  juros: string;
-  iof: string;
-  custoTotal: string;
-  proximaFatura: string;
+  valorFatura: number;
+  valorPago: number;
+  valorRotativo: number;
+  juros: number;
+  iof: number;
+  custoTotal: number;
+  proximaFatura: number;
   alerta: string;
 }
 
@@ -30,13 +30,13 @@ export interface ValidationResult {
 
 export interface ParcelaDetalhes {
   parcela: number;
-  prestacao: string;
-  juros: string;
-  saldo: string;
+  prestacao: number;
+  juros: number;
+  saldo: number;
 }
 
 export interface ParcelaDetalhesPRICE extends ParcelaDetalhes {
-  amortizacao: string;
+  amortizacao: number;
 }
 
 export interface ResumoSAC {
@@ -51,45 +51,45 @@ export interface ResumoPRICE {
 
 export interface ResultadoSAC {
   sistema: "SAC";
-  valorFinanciado: string;
+  valorFinanciado: number;
   prazo: string;
   taxa: string;
-  totalJuros: string;
-  totalPago: string;
-  primeiraParcela: string;
-  ultimaParcela: string;
+  totalJuros: number;
+  totalPago: number;
+  primeiraParcela: number;
+  ultimaParcela: number;
   resumo: ResumoSAC;
 }
 
 export interface ResultadoPRICE {
   sistema: "Price";
-  valorFinanciado: string;
+  valorFinanciado: number;
   prazo: string;
   taxa: string;
-  totalJuros: string;
-  totalPago: string;
-  prestacaoFixa: string;
+  totalJuros: number;
+  totalPago: number;
+  prestacaoFixa: number;
   resumo: ResumoPRICE;
 }
 
 export interface Cenario {
-  valor: string;
+  valor: number;
   prazo: string;
   taxa: string;
 }
 
 export interface SistemaComparacao {
-  totalJuros: string;
+  totalJuros: number;
   caracteristicas: string[];
 }
 
 export interface SACComparacao extends SistemaComparacao {
-  primeira: string;
-  ultima: string;
+  primeira: number;
+  ultima: number;
 }
 
 export interface PRICEComparacao extends SistemaComparacao {
-  parcelaFixa: string;
+  parcelaFixa: number;
 }
 
 export interface Recomendacao {
@@ -98,7 +98,7 @@ export interface Recomendacao {
 }
 
 export interface Comparacao {
-  economia: string;
+  economia: number;
   economiaPercentual: string;
   recomendacao: Recomendacao;
 }
@@ -111,17 +111,17 @@ export interface ResultadoComparacao {
 }
 
 export interface SimulacaoEntrada {
-  entrada: string;
+  entrada: number;
   entradaPercentual: string;
-  valorFinanciado: string;
+  valorFinanciado: number;
   sac: {
-    primeira: string;
-    ultima: string;
-    totalJuros: string;
+    primeira: number;
+    ultima: number;
+    totalJuros: number;
   };
   price: {
-    parcela: string;
-    totalJuros: string;
+    parcela: number;
+    totalJuros: number;
   };
 }
 
@@ -143,11 +143,11 @@ export interface TaxasUtilizadas {
 
 export interface ResultadoPoupanca {
   investimento: "Poupança";
-  valorInicial: string;
+  valorInicial: number;
   periodo: string;
   taxaMensal: string;
-  montanteFinal: string;
-  rendimento: string;
+  montanteFinal: number;
+  rendimento: number;
   rentabilidade: string;
   isento: true;
   observacao: string;
@@ -155,29 +155,29 @@ export interface ResultadoPoupanca {
 
 export interface ResultadoTesouroSelic {
   investimento: "Tesouro Selic";
-  valorInicial: string;
+  valorInicial: number;
   periodo: string;
   taxaAnual: string;
-  montanteBruto: string;
-  impostoRenda: string;
+  montanteBruto: number;
+  impostoRenda: number;
   aliquotaIR: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
+  montanteLiquido: number;
+  rendimentoLiquido: number;
   rentabilidade: string;
   observacao: string;
 }
 
 export interface ResultadoCDB {
   investimento: string;
-  valorInicial: string;
+  valorInicial: number;
   periodo: string;
   taxaAnual: string;
   percentualCDI: string;
-  montanteBruto: string;
-  impostoRenda: string;
+  montanteBruto: number;
+  impostoRenda: number;
   aliquotaIR: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
+  montanteLiquido: number;
+  rendimentoLiquido: number;
   rentabilidade: string;
 }
 
@@ -189,7 +189,7 @@ export interface OpcaoInvestimento {
 
 export interface OpcaoComparacao {
   nome: string;
-  rendimento: string;
+  rendimento: number;
   rentabilidade: string;
 }
 
@@ -201,11 +201,11 @@ export interface CenarioComparacao {
 
 export interface OpcoesComparacao {
   poupanca: {
-    rendimento: string;
+    rendimento: number;
     rentabilidade: string;
   };
   tesouroSelic: {
-    rendimento: string;
+    rendimento: number;
     rentabilidade: string;
   };
   cdbs: OpcaoComparacao[];
@@ -213,9 +213,9 @@ export interface OpcoesComparacao {
 
 export interface MelhorOpcao {
   nome: string;
-  rendimento: string;
+  rendimento: number;
   rentabilidade: string;
-  vantagem: string;
+  vantagem: number;
 }
 
 export interface ResultadoComparacaoInvestment {
@@ -228,23 +228,23 @@ export interface ResultadoComparacaoInvestment {
 
 export interface EvolucaoMensal {
   mes: number;
-  montante: string;
-  totalAportado: string;
-  rendimento: string;
+  montante: number;
+  totalAportado: number;
+  rendimento: number;
 }
 
 export interface SimulacaoAportes {
   simulacao: "Aportes Mensais";
-  valorInicial: string;
-  aporteMensal: string;
+  valorInicial: number;
+  aporteMensal: number;
   periodo: string;
   taxaAnual: string;
-  totalAportado: string;
-  montanteBruto: string;
-  rendimentoBruto: string;
-  impostoRenda: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
+  totalAportado: number;
+  montanteBruto: number;
+  rendimentoBruto: number;
+  impostoRenda: string | number;
+  montanteLiquido: number;
+  rendimentoLiquido: number;
   rentabilidadeTotal: string;
   evolucao: EvolucaoMensal[];
 }

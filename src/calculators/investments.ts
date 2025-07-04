@@ -47,11 +47,11 @@ class InvestmentCalc {
 
     return {
       investimento: "Poupança",
-      valorInicial: formatMoney(valor),
+      valorInicial: valor,
       periodo: formatPeriod(meses),
       taxaMensal: `${this.rates.getPoupanca().toFixed(2)}%`,
-      montanteFinal: formatMoney(montante),
-      rendimento: formatMoney(rendimento),
+      montanteFinal: montante,
+      rendimento: rendimento,
       rentabilidade: `${((rendimento / valor) * 100).toFixed(2)}%`,
       isento: true,
       observacao: "Isento de Imposto de Renda e IOF",
@@ -84,14 +84,14 @@ class InvestmentCalc {
 
     return {
       investimento: "Tesouro Selic",
-      valorInicial: formatMoney(valor),
+      valorInicial: valor,
       periodo: formatPeriod(meses),
       taxaAnual: `${this.rates.getSelic()}%`,
-      montanteBruto: formatMoney(montanteBruto),
-      impostoRenda: formatMoney(ir),
+      montanteBruto: montanteBruto,
+      impostoRenda: ir,
       aliquotaIR: `${aliquotaIR}%`,
-      montanteLiquido: formatMoney(valor + rendimentoLiquido),
-      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      montanteLiquido: valor + rendimentoLiquido,
+      rendimentoLiquido: rendimentoLiquido,
       rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
       observacao: `Tributação regressiva: ${aliquotaIR}% de IR após ${Math.floor(
         dias
@@ -129,15 +129,15 @@ class InvestmentCalc {
 
     return {
       investimento: `CDB ${percentualCDI}% CDI`,
-      valorInicial: formatMoney(valor),
+      valorInicial: valor,
       periodo: formatPeriod(meses),
       taxaAnual: `${taxaCDI.toFixed(2)}%`,
       percentualCDI: `${percentualCDI}%`,
-      montanteBruto: formatMoney(montanteBruto),
-      impostoRenda: formatMoney(ir),
+      montanteBruto: montanteBruto,
+      impostoRenda: ir,
       aliquotaIR: `${aliquotaIR}%`,
-      montanteLiquido: formatMoney(valor + rendimentoLiquido),
-      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      montanteLiquido: valor + rendimentoLiquido,
+      rendimentoLiquido: rendimentoLiquido,
       rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
     };
   }
@@ -210,12 +210,11 @@ class InvestmentCalc {
       ranking: todasOpcoes.sort((a, b) => b.rendimento - a.rendimento),
       melhorOpcao: {
         nome: melhorOpcao.nome,
-        rendimento: formatMoney(melhorOpcao.rendimento),
+        rendimento: melhorOpcao.rendimento,
         rentabilidade: melhorOpcao.rentabilidade,
-        vantagem: formatMoney(
+        vantagem:
           melhorOpcao.rendimento -
-            Math.min(...todasOpcoes.map((option) => option.rendimento))
-        ),
+          Math.min(...todasOpcoes.map((option) => option.rendimento)),
       },
       taxasUtilizadas: {
         selic: this.rates.getAllRates().formatted.selic,
@@ -262,9 +261,9 @@ class InvestmentCalc {
       if (mes <= 12 || mes % 12 === 0 || mes === meses) {
         evolucao.push({
           mes: mes,
-          montante: formatMoney(montante),
-          totalAportado: formatMoney(totalAportado),
-          rendimento: formatMoney(montante - totalAportado),
+          montante: montante,
+          totalAportado: totalAportado,
+          rendimento: montante - totalAportado,
         });
       }
     }
@@ -281,16 +280,16 @@ class InvestmentCalc {
 
     return {
       simulacao: "Aportes Mensais",
-      valorInicial: formatMoney(valorInicial),
-      aporteMensal: formatMoney(aporteMensal),
+      valorInicial: valorInicial,
+      aporteMensal: aporteMensal,
       periodo: formatPeriod(meses),
       taxaAnual: `${taxaAnual}%`,
-      totalAportado: formatMoney(totalAportado),
-      montanteBruto: formatMoney(montante),
-      rendimentoBruto: formatMoney(rendimentoBruto),
-      impostoRenda: temIR ? formatMoney(ir) : "Isento",
-      montanteLiquido: formatMoney(montante - (temIR ? ir : 0)),
-      rendimentoLiquido: formatMoney(rendimentoLiquido),
+      totalAportado: totalAportado,
+      montanteBruto: montante,
+      rendimentoBruto: rendimentoBruto,
+      impostoRenda: temIR ? ir : "Isento",
+      montanteLiquido: montante - (temIR ? ir : 0),
+      rendimentoLiquido: rendimentoLiquido,
       rentabilidadeTotal: `${(
         (rendimentoLiquido / totalAportado) *
         100

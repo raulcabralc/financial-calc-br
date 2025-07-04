@@ -1,5 +1,4 @@
 import {
-  formatMoney,
   parseMoney,
   convertRate,
   formatPeriod,
@@ -50,32 +49,30 @@ class FinancingCalc {
       if (i <= 12) {
         primeiros12.push({
           parcela: i,
-          prestacao: formatMoney(prestacao),
-          juros: formatMoney(juros),
-          saldo: formatMoney(saldoDevedor),
+          prestacao: prestacao,
+          juros: juros,
+          saldo: saldoDevedor,
         });
       }
       if (i > parcelas - 12) {
         ultimos12.push({
           parcela: i,
-          prestacao: formatMoney(prestacao),
-          juros: formatMoney(juros),
-          saldo: formatMoney(saldoDevedor),
+          prestacao: prestacao,
+          juros: juros,
+          saldo: saldoDevedor,
         });
       }
     }
 
     return {
       sistema: "SAC",
-      valorFinanciado: formatMoney(valor),
+      valorFinanciado: valor,
       prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
       taxa: `${taxaAnual}% a.a.`,
-      totalJuros: formatMoney(totalJuros),
-      totalPago: formatMoney(valor + totalJuros),
-      primeiraParcela: formatMoney(amortizacao + (valor * taxaMensal) / 100),
-      ultimaParcela: formatMoney(
-        amortizacao + (amortizacao * taxaMensal) / 100
-      ),
+      totalJuros: totalJuros,
+      totalPago: valor + totalJuros,
+      primeiraParcela: amortizacao + (valor * taxaMensal) / 100,
+      ultimaParcela: amortizacao + (amortizacao * taxaMensal) / 100,
       resumo: {
         primeiros12,
         ultimos12,
@@ -118,31 +115,31 @@ class FinancingCalc {
       if (i <= 12) {
         primeiros12.push({
           parcela: i,
-          prestacao: formatMoney(prestacao),
-          juros: formatMoney(juros),
-          amortizacao: formatMoney(amortizacao),
-          saldo: formatMoney(saldoDevedor),
+          prestacao: prestacao,
+          juros: juros,
+          amortizacao: amortizacao,
+          saldo: saldoDevedor,
         });
       }
       if (i > parcelas - 12) {
         ultimos12.push({
           parcela: i,
-          prestacao: formatMoney(prestacao),
-          juros: formatMoney(juros),
-          amortizacao: formatMoney(amortizacao),
-          saldo: formatMoney(saldoDevedor),
+          prestacao: prestacao,
+          juros: juros,
+          amortizacao: amortizacao,
+          saldo: saldoDevedor,
         });
       }
     }
 
     return {
       sistema: "Price",
-      valorFinanciado: formatMoney(valor),
+      valorFinanciado: valor,
       prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
       taxa: `${taxaAnual}% a.a.`,
-      totalJuros: formatMoney(totalJuros),
-      totalPago: formatMoney(valor + totalJuros),
-      prestacaoFixa: formatMoney(prestacao),
+      totalJuros: totalJuros,
+      totalPago: valor + totalJuros,
+      prestacaoFixa: prestacao,
       resumo: {
         primeiros12,
         ultimos12,
@@ -177,7 +174,7 @@ class FinancingCalc {
 
     return {
       cenario: {
-        valor: formatMoney(valor),
+        valor: valor,
         prazo: `${anos} anos`,
         taxa: `${taxaAnual}% ao ano`,
       },
@@ -201,7 +198,7 @@ class FinancingCalc {
         ],
       },
       comparacao: {
-        economia: formatMoney(economia),
+        economia: economia,
         economiaPercentual: `${((economia / priceJuros) * 100).toFixed(1)}%`,
         recomendacao: this.getRecommendation(
           sacJuros,
@@ -242,9 +239,7 @@ class FinancingCalc {
     } else {
       return {
         sistema: "SAC",
-        motivo: `Economia significativa de ${formatMoney(
-          priceJuros - sacJuros
-        )}`,
+        motivo: `Economia significativa de ${priceJuros - sacJuros}`,
       };
     }
   }
@@ -267,9 +262,9 @@ class FinancingCalc {
     );
 
     return {
-      entrada: formatMoney(entrada),
+      entrada: entrada,
       entradaPercentual: `${((entrada / valorImovel) * 100).toFixed(0)}%`,
-      valorFinanciado: formatMoney(valorFinanciado),
+      valorFinanciado: valorFinanciado,
       sac: {
         primeira: result.sac.primeira,
         ultima: result.sac.ultima,

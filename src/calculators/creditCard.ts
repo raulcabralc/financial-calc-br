@@ -1,4 +1,4 @@
-import { formatMoney } from "../utils/utils";
+import {} from "../utils/utils";
 import { creditCardPaga, creditCard } from "../types/types";
 
 class creditCardCalc {
@@ -21,13 +21,13 @@ class creditCardCalc {
     const custoTotal = juros + iof;
 
     return {
-      valorFatura: formatMoney(valorFatura),
-      valorPago: formatMoney(valorPago),
-      valorRotativo: formatMoney(valorRotativo),
-      juros: formatMoney(juros),
-      iof: formatMoney(iof),
-      custoTotal: formatMoney(custoTotal),
-      proximaFatura: formatMoney(valorRotativo + custoTotal),
+      valorFatura: valorFatura,
+      valorPago: valorPago,
+      valorRotativo: valorRotativo,
+      juros: juros,
+      iof: iof,
+      custoTotal: custoTotal,
+      proximaFatura: valorRotativo + custoTotal,
       alerta: custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK",
     };
   }
