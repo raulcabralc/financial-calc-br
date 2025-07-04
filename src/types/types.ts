@@ -51,12 +51,12 @@ export interface ParcelaDetalhesPRICE extends ParcelaDetalhes {
   amortizacao: number;
 }
 
-export interface ResumoSAC {
+interface ResumoSAC {
   primeiros12: ParcelaDetalhes[];
   ultimos12: ParcelaDetalhes[];
 }
 
-export interface ResumoPRICE {
+interface ResumoPRICE {
   primeiros12: ParcelaDetalhesPRICE[];
   ultimos12: ParcelaDetalhesPRICE[];
 }
@@ -107,23 +107,23 @@ export interface ResultadoPRICE {
   formatted: ResultadoPRICEFormatted;
 }
 
-export interface Cenario {
+interface Cenario {
   valor: number;
   prazo: string;
   taxa: string;
 }
 
-export interface SistemaComparacao {
+interface SistemaComparacao {
   totalJuros: number;
   caracteristicas: string[];
 }
 
-export interface SACComparacao extends SistemaComparacao {
+interface SACComparacao extends SistemaComparacao {
   primeira: number;
   ultima: number;
 }
 
-export interface PRICEComparacao extends SistemaComparacao {
+interface PRICEComparacao extends SistemaComparacao {
   parcelaFixa: number;
 }
 
