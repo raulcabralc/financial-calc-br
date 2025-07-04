@@ -3,6 +3,7 @@ import {
   convertRate,
   formatPeriod,
   validateFinancialParams,
+  formatMoney,
 } from "../utils/utils";
 
 import {
@@ -67,7 +68,7 @@ class FinancingCalc {
     return {
       sistema: "SAC",
       valorFinanciado: valor,
-      prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
+      prazo: parcelas,
       taxa: `${taxaAnual}% a.a.`,
       totalJuros: totalJuros,
       totalPago: valor + totalJuros,
@@ -76,6 +77,18 @@ class FinancingCalc {
       resumo: {
         primeiros12,
         ultimos12,
+      },
+      formatted: {
+        sistema: "SAC",
+        valorFinanciado: formatMoney(valor),
+        prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
+        taxa: `${taxaAnual}% a.a.`,
+        totalJuros: formatMoney(totalJuros),
+        totalPago: formatMoney(valor + totalJuros),
+        primeiraParcela: formatMoney(amortizacao + (valor * taxaMensal) / 100),
+        ultimaParcela: formatMoney(
+          amortizacao + (amortizacao * taxaMensal) / 100
+        ),
       },
     };
   }
@@ -135,7 +148,7 @@ class FinancingCalc {
     return {
       sistema: "Price",
       valorFinanciado: valor,
-      prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
+      prazo: parcelas,
       taxa: `${taxaAnual}% a.a.`,
       totalJuros: totalJuros,
       totalPago: valor + totalJuros,
@@ -143,6 +156,15 @@ class FinancingCalc {
       resumo: {
         primeiros12,
         ultimos12,
+      },
+      formatted: {
+        sistema: "Price",
+        valorFinanciado: formatMoney(valor),
+        prazo: `${formatPeriod(parcelas)} (${parcelas}x)`,
+        taxa: `${taxaAnual}% a.a.`,
+        totalJuros: formatMoney(totalJuros),
+        totalPago: formatMoney(valor + totalJuros),
+        prestacaoFixa: formatMoney(prestacao),
       },
     };
   }
@@ -199,13 +221,17 @@ class FinancingCalc {
       },
       comparacao: {
         economia: economia,
-        economiaPercentual: `${((economia / priceJuros) * 100).toFixed(1)}%`,
+        economiaPercentual: economia / priceJuros,
         recomendacao: this.getRecommendation(
           sacJuros,
           priceJuros,
           parseMoney(sac.primeiraParcela),
           parseMoney(price.prestacaoFixa)
         ),
+        formatted: {
+          economia: formatMoney(economia),
+          economiaPercentual: `${((economia / priceJuros) * 100).toFixed(1)}%`,
+        },
       },
     };
   }
@@ -244,9 +270,9 @@ class FinancingCalc {
     }
   }
 
-  /* =================================== */
-  /*    SIMULAÇÃO DE UM FINANCIAMENTO    */
-  /* =================================== */
+  /* =============================================== */
+  /*    SIMULAÇÃO DE UM FINANCIAMENTO COM ENTRADA    */
+  /* =============================================== */
 
   simulateDownPayment(
     valorImovel: number,
@@ -263,7 +289,7 @@ class FinancingCalc {
 
     return {
       entrada: entrada,
-      entradaPercentual: `${((entrada / valorImovel) * 100).toFixed(0)}%`,
+      entradaPercentual: entrada / valorImovel,
       valorFinanciado: valorFinanciado,
       sac: {
         primeira: result.sac.primeira,
@@ -273,6 +299,20 @@ class FinancingCalc {
       price: {
         parcela: result.price.parcelaFixa,
         totalJuros: result.price.totalJuros,
+      },
+      formatted: {
+        entrada: formatMoney(entrada),
+        entradaPercentual: `${((entrada / valorImovel) * 100).toFixed(0)}%`,
+        valorFinanciado: formatMoney(valorFinanciado),
+        sac: {
+          primeira: formatMoney(result.sac.primeira),
+          ultima: formatMoney(result.sac.ultima),
+          totalJuros: formatMoney(result.sac.totalJuros),
+        },
+        price: {
+          parcela: formatMoney(result.price.parcelaFixa),
+          totalJuros: formatMoney(result.price.totalJuros),
+        },
       },
     };
   }

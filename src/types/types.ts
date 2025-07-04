@@ -61,27 +61,50 @@ export interface ResumoPRICE {
   ultimos12: ParcelaDetalhesPRICE[];
 }
 
+interface ResultadoSACFormatted {
+  sistema: "SAC";
+  valorFinanciado: string;
+  prazo: string;
+  taxa: string;
+  totalJuros: string;
+  totalPago: string;
+  primeiraParcela: string;
+  ultimaParcela: string;
+}
+
 export interface ResultadoSAC {
   sistema: "SAC";
   valorFinanciado: number;
-  prazo: string;
+  prazo: number;
   taxa: string;
   totalJuros: number;
   totalPago: number;
   primeiraParcela: number;
   ultimaParcela: number;
   resumo: ResumoSAC;
+  formatted: ResultadoSACFormatted;
+}
+
+interface ResultadoPRICEFormatted {
+  sistema: "Price";
+  valorFinanciado: string;
+  prazo: string;
+  taxa: string;
+  totalJuros: string;
+  totalPago: string;
+  prestacaoFixa: string;
 }
 
 export interface ResultadoPRICE {
   sistema: "Price";
   valorFinanciado: number;
-  prazo: string;
+  prazo: number;
   taxa: string;
   totalJuros: number;
   totalPago: number;
   prestacaoFixa: number;
   resumo: ResumoPRICE;
+  formatted: ResultadoPRICEFormatted;
 }
 
 export interface Cenario {
@@ -109,10 +132,16 @@ export interface Recomendacao {
   motivo: string;
 }
 
+interface ComparacaoFormatted {
+  economia: string;
+  economiaPercentual: string;
+}
+
 export interface Comparacao {
   economia: number;
-  economiaPercentual: string;
+  economiaPercentual: number;
   recomendacao: Recomendacao;
+  formatted: ComparacaoFormatted;
 }
 
 export interface ResultadoComparacao {
@@ -122,9 +151,24 @@ export interface ResultadoComparacao {
   comparacao: Comparacao;
 }
 
+interface SimulacaoEntradaFormatted {
+  entrada: string;
+  entradaPercentual: string;
+  valorFinanciado: string;
+  sac: {
+    primeira: string;
+    ultima: string;
+    totalJuros: string;
+  };
+  price: {
+    parcela: string;
+    totalJuros: string;
+  };
+}
+
 export interface SimulacaoEntrada {
   entrada: number;
-  entradaPercentual: string;
+  entradaPercentual: number;
   valorFinanciado: number;
   sac: {
     primeira: number;
@@ -135,6 +179,7 @@ export interface SimulacaoEntrada {
     parcela: number;
     totalJuros: number;
   };
+  formatted: SimulacaoEntradaFormatted;
 }
 
 /* ===================== */
