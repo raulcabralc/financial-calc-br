@@ -4,6 +4,7 @@ import {
   calcIRRate,
   validateFinancialParams,
   formatPeriod,
+  formatMoney,
 } from "../utils/utils";
 
 import {
@@ -47,13 +48,21 @@ class InvestmentCalc {
     return {
       investimento: "Poupança",
       valorInicial: valor,
-      periodo: formatPeriod(meses),
-      taxaMensal: `${this.rates.getPoupanca().toFixed(2)}%`,
+      periodo: meses,
+      taxaMensal: taxaMensal,
       montanteFinal: montante,
       rendimento: rendimento,
-      rentabilidade: `${((rendimento / valor) * 100).toFixed(2)}%`,
+      rentabilidade: rendimento / valor,
       isento: true,
       observacao: "Isento de Imposto de Renda e IOF",
+      formatted: {
+        valorInicial: formatMoney(valor),
+        periodo: formatPeriod(meses),
+        taxaMensal: `${this.rates.getPoupanca().toFixed(2)}%`,
+        montanteFinal: formatMoney(montante),
+        rendimento: formatMoney(rendimento),
+        rentabilidade: `${((rendimento / valor) * 100).toFixed(2)}%`,
+      },
     };
   }
 
@@ -84,17 +93,28 @@ class InvestmentCalc {
     return {
       investimento: "Tesouro Selic",
       valorInicial: valor,
-      periodo: formatPeriod(meses),
-      taxaAnual: `${this.rates.getSelic()}%`,
+      periodo: meses,
+      taxaAnual: this.rates.getSelic() / 100,
       montanteBruto: montanteBruto,
       impostoRenda: ir,
-      aliquotaIR: `${aliquotaIR}%`,
+      aliquotaIR: aliquotaIR / 100,
       montanteLiquido: valor + rendimentoLiquido,
       rendimentoLiquido: rendimentoLiquido,
-      rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+      rentabilidade: rendimentoLiquido / valor,
       observacao: `Tributação regressiva: ${aliquotaIR}% de IR após ${Math.floor(
         dias
       )} dias`,
+      formatted: {
+        valorInicial: formatMoney(valor),
+        periodo: formatPeriod(meses),
+        taxaAnual: `${this.rates.getSelic()}%`,
+        montanteBruto: formatMoney(montanteBruto),
+        impostoRenda: formatMoney(ir),
+        aliquotaIR: `${aliquotaIR}%`,
+        montanteLiquido: formatMoney(valor + rendimentoLiquido),
+        rendimentoLiquido: formatMoney(rendimentoLiquido),
+        rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+      },
     };
   }
 
@@ -129,15 +149,27 @@ class InvestmentCalc {
     return {
       investimento: `CDB ${percentualCDI}% CDI`,
       valorInicial: valor,
-      periodo: formatPeriod(meses),
-      taxaAnual: `${taxaCDI.toFixed(2)}%`,
-      percentualCDI: `${percentualCDI}%`,
+      periodo: meses,
+      taxaAnual: taxaCDI / 100,
+      percentualCDI: percentualCDI / 100,
       montanteBruto: montanteBruto,
       impostoRenda: ir,
-      aliquotaIR: `${aliquotaIR}%`,
+      aliquotaIR: aliquotaIR / 100,
       montanteLiquido: valor + rendimentoLiquido,
       rendimentoLiquido: rendimentoLiquido,
-      rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+      rentabilidade: rendimentoLiquido / valor,
+      formatted: {
+        valorInicial: formatMoney(valor),
+        periodo: formatPeriod(meses),
+        taxaAnual: `${taxaCDI.toFixed(2)}%`,
+        percentualCDI: `${percentualCDI}%`,
+        montanteBruto: formatMoney(montanteBruto),
+        impostoRenda: formatMoney(ir),
+        aliquotaIR: `${aliquotaIR}%`,
+        montanteLiquido: formatMoney(valor + rendimentoLiquido),
+        rendimentoLiquido: formatMoney(rendimentoLiquido),
+        rentabilidade: `${((rendimentoLiquido / valor) * 100).toFixed(2)}%`,
+      },
     };
   }
 
@@ -281,19 +313,29 @@ class InvestmentCalc {
       simulacao: "Aportes Mensais",
       valorInicial: valorInicial,
       aporteMensal: aporteMensal,
-      periodo: formatPeriod(meses),
-      taxaAnual: `${taxaAnual}%`,
+      periodo: meses,
+      taxaAnual: taxaAnual / 100,
       totalAportado: totalAportado,
       montanteBruto: montante,
       rendimentoBruto: rendimentoBruto,
-      impostoRenda: temIR ? ir : "Isento",
+      impostoRenda: temIR ? ir : 0,
       montanteLiquido: montante - (temIR ? ir : 0),
       rendimentoLiquido: rendimentoLiquido,
-      rentabilidadeTotal: `${(
-        (rendimentoLiquido / totalAportado) *
-        100
-      ).toFixed(2)}%`,
+      rentabilidadeTotal: rendimentoLiquido / totalAportado,
       evolucao: evolucao,
+      formatted: {
+        valorInicial: formatMoney(valorInicial),
+        aporteMensal: formatMoney(aporteMensal),
+        periodo: formatPeriod(meses),
+        taxaAnual: `${taxaAnual}%`,
+        totalAportado: formatMoney(totalAportado),
+        montanteBruto: formatMoney(montante),
+        rendimentoBruto: formatMoney(rendimentoBruto),
+        impostoRenda: temIR ? formatMoney(ir) : formatMoney(0),
+        montanteLiquido: formatMoney(montante - (temIR ? ir : 0)),
+        rendimentoLiquido: formatMoney(rendimentoLiquido),
+        rentabilidadeTotal: formatMoney(rendimentoLiquido / totalAportado),
+      },
     };
   }
 }

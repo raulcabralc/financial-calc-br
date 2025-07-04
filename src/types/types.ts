@@ -198,56 +198,93 @@ export interface TaxasUtilizadas {
   atualizadoEm: string;
 }
 
+interface ResultadoPoupancaFormatted {
+  valorInicial: string;
+  periodo: string;
+  taxaMensal: string;
+  montanteFinal: string;
+  rendimento: string;
+  rentabilidade: string;
+}
+
 export interface ResultadoPoupanca {
   investimento: "Poupança";
   valorInicial: number;
-  periodo: string;
-  taxaMensal: string;
+  periodo: number;
+  taxaMensal: number;
   montanteFinal: number;
   rendimento: number;
-  rentabilidade: string;
+  rentabilidade: number;
   isento: true;
   observacao: string;
+  formatted: ResultadoPoupancaFormatted;
+}
+
+interface ResultadoTesouroSelicFormatted {
+  valorInicial: string;
+  periodo: string;
+  taxaAnual: string;
+  montanteBruto: string;
+  impostoRenda: string;
+  aliquotaIR: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidade: string;
 }
 
 export interface ResultadoTesouroSelic {
   investimento: "Tesouro Selic";
   valorInicial: number;
-  periodo: string;
-  taxaAnual: string;
+  periodo: number;
+  taxaAnual: number;
   montanteBruto: number;
   impostoRenda: number;
-  aliquotaIR: string;
+  aliquotaIR: number;
   montanteLiquido: number;
   rendimentoLiquido: number;
-  rentabilidade: string;
+  rentabilidade: number;
   observacao: string;
+  formatted: ResultadoTesouroSelicFormatted;
+}
+
+interface ResultadoCDBFormatted {
+  valorInicial: string;
+  periodo: string;
+  taxaAnual: string;
+  percentualCDI: string;
+  montanteBruto: string;
+  impostoRenda: string;
+  aliquotaIR: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidade: string;
 }
 
 export interface ResultadoCDB {
   investimento: string;
   valorInicial: number;
-  periodo: string;
-  taxaAnual: string;
-  percentualCDI: string;
+  periodo: number;
+  taxaAnual: number;
+  percentualCDI: number;
   montanteBruto: number;
   impostoRenda: number;
-  aliquotaIR: string;
+  aliquotaIR: number;
   montanteLiquido: number;
   rendimentoLiquido: number;
-  rentabilidade: string;
+  rentabilidade: number;
+  formatted: ResultadoCDBFormatted;
 }
 
 export interface OpcaoInvestimento {
   nome: string;
   rendimento: number;
-  rentabilidade: string;
+  rentabilidade: number;
 }
 
 export interface OpcaoComparacao {
   nome: string;
   rendimento: number;
-  rentabilidade: string;
+  rentabilidade: number;
 }
 
 export interface CenarioComparacao {
@@ -259,11 +296,11 @@ export interface CenarioComparacao {
 export interface OpcoesComparacao {
   poupanca: {
     rendimento: number;
-    rentabilidade: string;
+    rentabilidade: number;
   };
   tesouroSelic: {
     rendimento: number;
-    rentabilidade: string;
+    rentabilidade: number;
   };
   cdbs: OpcaoComparacao[];
 }
@@ -271,7 +308,7 @@ export interface OpcoesComparacao {
 export interface MelhorOpcao {
   nome: string;
   rendimento: number;
-  rentabilidade: string;
+  rentabilidade: number;
   vantagem: number;
 }
 
@@ -290,20 +327,35 @@ export interface EvolucaoMensal {
   rendimento: number;
 }
 
+interface SimulacaoAportesFormatted {
+  valorInicial: string;
+  aporteMensal: string;
+  periodo: string;
+  taxaAnual: string;
+  totalAportado: string;
+  montanteBruto: string;
+  rendimentoBruto: string;
+  impostoRenda: string;
+  montanteLiquido: string;
+  rendimentoLiquido: string;
+  rentabilidadeTotal: string;
+}
+
 export interface SimulacaoAportes {
   simulacao: "Aportes Mensais";
   valorInicial: number;
   aporteMensal: number;
-  periodo: string;
-  taxaAnual: string;
+  periodo: number;
+  taxaAnual: number;
   totalAportado: number;
   montanteBruto: number;
   rendimentoBruto: number;
-  impostoRenda: string | number;
+  impostoRenda: number;
   montanteLiquido: number;
   rendimentoLiquido: number;
-  rentabilidadeTotal: string;
+  rentabilidadeTotal: number;
   evolucao: EvolucaoMensal[];
+  formatted: SimulacaoAportesFormatted;
 }
 
 /* ================= */
