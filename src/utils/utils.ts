@@ -1,17 +1,8 @@
-interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-}
-
-interface CompoundInterestResult {
-  capital: number;
-  taxa: number;
-  periodo: string;
-  montante: number;
-  juros: number;
-}
-
-type RateConversion = "anual" | "mensal";
+import {
+  ValidationResultUtils,
+  CompoundInterestResult,
+  RateConversion,
+} from "../types/types";
 
 function formatMoney(valor: number): string {
   return new Intl.NumberFormat("pt-BR", {
@@ -54,7 +45,7 @@ function validateFinancialParams(
   valor: number,
   taxa: number,
   tempo: number
-): ValidationResult {
+): ValidationResultUtils {
   const errors: string[] = [];
 
   if (!isValidNumber(valor) || valor <= 0) {

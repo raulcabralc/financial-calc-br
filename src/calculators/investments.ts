@@ -5,133 +5,20 @@ import {
   calcIRRate,
   validateFinancialParams,
   formatPeriod,
-} from "./utils";
+} from "../utils/utils";
 
-import RatesManager from "./rates";
+import {
+  ValidationResultInvestment,
+  ResultadoCDB,
+  ResultadoTesouroSelic,
+  ResultadoPoupanca,
+  OpcaoInvestimento,
+  SimulacaoAportes,
+  EvolucaoMensal,
+  ResultadoComparacaoInvestment,
+} from "../types/types";
 
-/* ============== */
-/*   INTERFACES   */
-/* ============== */
-
-interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-}
-
-interface TaxasUtilizadas {
-  selic: string;
-  cdi: string;
-  poupanca: string;
-  atualizadoEm: string;
-}
-
-interface ResultadoPoupanca {
-  investimento: "Poupança";
-  valorInicial: string;
-  periodo: string;
-  taxaMensal: string;
-  montanteFinal: string;
-  rendimento: string;
-  rentabilidade: string;
-  isento: true;
-  observacao: string;
-}
-
-interface ResultadoTesouroSelic {
-  investimento: "Tesouro Selic";
-  valorInicial: string;
-  periodo: string;
-  taxaAnual: string;
-  montanteBruto: string;
-  impostoRenda: string;
-  aliquotaIR: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
-  rentabilidade: string;
-  observacao: string;
-}
-
-interface ResultadoCDB {
-  investimento: string;
-  valorInicial: string;
-  periodo: string;
-  taxaAnual: string;
-  percentualCDI: string;
-  montanteBruto: string;
-  impostoRenda: string;
-  aliquotaIR: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
-  rentabilidade: string;
-}
-
-interface OpcaoInvestimento {
-  nome: string;
-  rendimento: number;
-  rentabilidade: string;
-}
-
-interface OpcaoComparacao {
-  nome: string;
-  rendimento: string;
-  rentabilidade: string;
-}
-
-interface CenarioComparacao {
-  valor: string;
-  periodo: string;
-  dataAnalise: string;
-}
-
-interface OpcoesComparacao {
-  poupanca: {
-    rendimento: string;
-    rentabilidade: string;
-  };
-  tesouroSelic: {
-    rendimento: string;
-    rentabilidade: string;
-  };
-  cdbs: OpcaoComparacao[];
-}
-
-interface MelhorOpcao {
-  nome: string;
-  rendimento: string;
-  rentabilidade: string;
-  vantagem: string;
-}
-
-interface ResultadoComparacao {
-  cenario: CenarioComparacao;
-  opcoes: OpcoesComparacao;
-  ranking: OpcaoInvestimento[];
-  melhorOpcao: MelhorOpcao;
-  taxasUtilizadas: TaxasUtilizadas;
-}
-
-interface EvolucaoMensal {
-  mes: number;
-  montante: string;
-  totalAportado: string;
-  rendimento: string;
-}
-
-interface SimulacaoAportes {
-  simulacao: "Aportes Mensais";
-  valorInicial: string;
-  aporteMensal: string;
-  periodo: string;
-  taxaAnual: string;
-  totalAportado: string;
-  montanteBruto: string;
-  rendimentoBruto: string;
-  impostoRenda: string;
-  montanteLiquido: string;
-  rendimentoLiquido: string;
-  rentabilidadeTotal: string;
-  evolucao: EvolucaoMensal[];
-}
+import RatesManager from "../services/rates";
 
 class InvestmentCalc {
   private rates: RatesManager;
@@ -145,7 +32,7 @@ class InvestmentCalc {
   /* ============== */
 
   investmentPoupanca(valor: number, meses: number): ResultadoPoupanca {
-    const validation: ValidationResult = validateFinancialParams(
+    const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
       this.rates.getPoupanca(),
       meses
@@ -176,7 +63,7 @@ class InvestmentCalc {
   /* =================== */
 
   investmentTesouroSelic(valor: number, meses: number): ResultadoTesouroSelic {
-    const validation: ValidationResult = validateFinancialParams(
+    const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
       this.rates.getSelic(),
       meses
@@ -221,7 +108,7 @@ class InvestmentCalc {
     meses: number,
     percentualCDI: number = 100
   ): ResultadoCDB {
-    const validation: ValidationResult = validateFinancialParams(
+    const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
       percentualCDI,
       meses
@@ -263,7 +150,7 @@ class InvestmentCalc {
     valor: number,
     meses: number,
     opcoes: number[] = [100, 110, 120]
-  ): ResultadoComparacao {
+  ): ResultadoComparacaoInvestment {
     const poupanca: ResultadoPoupanca = this.investmentPoupanca(valor, meses);
     const selic: ResultadoTesouroSelic = this.investmentTesouroSelic(
       valor,
@@ -350,7 +237,7 @@ class InvestmentCalc {
     taxaAnual: number,
     temIR: boolean = true
   ): SimulacaoAportes {
-    const validation: ValidationResult = validateFinancialParams(
+    const validation: ValidationResultInvestment = validateFinancialParams(
       valorInicial,
       taxaAnual,
       meses

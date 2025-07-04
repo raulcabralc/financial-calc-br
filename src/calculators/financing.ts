@@ -4,113 +4,18 @@ import {
   convertRate,
   formatPeriod,
   validateFinancialParams,
-} from "./utils";
+} from "../utils/utils";
 
-/* ============== */
-/*   INTERFACES   */
-/* ============== */
-
-interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
-}
-
-interface ParcelaDetalhes {
-  parcela: number;
-  prestacao: string;
-  juros: string;
-  saldo: string;
-}
-
-interface ParcelaDetalhesPRICE extends ParcelaDetalhes {
-  amortizacao: string;
-}
-
-interface ResumoSAC {
-  primeiros12: ParcelaDetalhes[];
-  ultimos12: ParcelaDetalhes[];
-}
-
-interface ResumoPRICE {
-  primeiros12: ParcelaDetalhesPRICE[];
-  ultimos12: ParcelaDetalhesPRICE[];
-}
-
-interface ResultadoSAC {
-  sistema: "SAC";
-  valorFinanciado: string;
-  prazo: string;
-  taxa: string;
-  totalJuros: string;
-  totalPago: string;
-  primeiraParcela: string;
-  ultimaParcela: string;
-  resumo: ResumoSAC;
-}
-
-interface ResultadoPRICE {
-  sistema: "Price";
-  valorFinanciado: string;
-  prazo: string;
-  taxa: string;
-  totalJuros: string;
-  totalPago: string;
-  prestacaoFixa: string;
-  resumo: ResumoPRICE;
-}
-
-interface Cenario {
-  valor: string;
-  prazo: string;
-  taxa: string;
-}
-
-interface SistemaComparacao {
-  totalJuros: string;
-  caracteristicas: string[];
-}
-
-interface SACComparacao extends SistemaComparacao {
-  primeira: string;
-  ultima: string;
-}
-
-interface PRICEComparacao extends SistemaComparacao {
-  parcelaFixa: string;
-}
-
-interface Recomendacao {
-  sistema: "SAC" | "Price";
-  motivo: string;
-}
-
-interface Comparacao {
-  economia: string;
-  economiaPercentual: string;
-  recomendacao: Recomendacao;
-}
-
-interface ResultadoComparacao {
-  cenario: Cenario;
-  sac: SACComparacao;
-  price: PRICEComparacao;
-  comparacao: Comparacao;
-}
-
-interface SimulacaoEntrada {
-  entrada: string;
-  entradaPercentual: string;
-  valorFinanciado: string;
-  sac: {
-    primeira: string;
-    ultima: string;
-    totalJuros: string;
-  };
-  price: {
-    parcela: string;
-    totalJuros: string;
-  };
-}
+import {
+  ValidationResult,
+  ParcelaDetalhes,
+  ParcelaDetalhesPRICE,
+  ResultadoSAC,
+  ResultadoPRICE,
+  Recomendacao,
+  ResultadoComparacao,
+  SimulacaoEntrada,
+} from "../types/types";
 
 class FinancingCalc {
   /* ========================== */

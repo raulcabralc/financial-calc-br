@@ -1,36 +1,11 @@
 import * as https from "https";
 
-interface Rates {
-  selic: number;
-  cdi: number;
-  ipca: number;
-  dolar: number;
-  poupanca: number;
-}
-
-interface FormattedRates {
-  selic: string;
-  cdi: string;
-  poupanca: string;
-  dolar: string;
-  ipca: string;
-}
-
-interface AllRates extends Rates {
-  formatted: FormattedRates;
-}
-
-interface SelicApiResponse {
-  data: string;
-  valor: string;
-}
-
-interface DolarApiResponse {
-  rates: {
-    BRL: number;
-    [key: string]: number;
-  };
-}
+import {
+  Rates,
+  SelicApiResponse,
+  DolarApiResponse,
+  AllRates,
+} from "../types/types";
 
 class RatesManager {
   private rates: Rates;
