@@ -76,7 +76,7 @@ export interface ResultadoSAC {
   sistema: "SAC";
   valorFinanciado: number;
   prazo: number;
-  taxa: string;
+  taxa: number;
   totalJuros: number;
   totalPago: number;
   primeiraParcela: number;
@@ -99,7 +99,7 @@ export interface ResultadoPRICE {
   sistema: "Price";
   valorFinanciado: number;
   prazo: number;
-  taxa: string;
+  taxa: number;
   totalJuros: number;
   totalPago: number;
   prestacaoFixa: number;
