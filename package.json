@@ -1,0 +1,58 @@
+{
+  "name": "financial-calc-br",
+  "version": "1.0.0",
+  "description": "Calculadora financeira brasileira com suporte a financiamentos, investimentos e cartão de crédito",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.esm.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:verbose": "jest --verbose",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [
+    "financial",
+    "calculator",
+    "brazil",
+    "financing",
+    "investment",
+    "credit-card",
+    "sac",
+    "price",
+    "cdb",
+    "tesouro-direto",
+    "poupança"
+  ],
+  "author": "Raul Cabral <raulcabralc@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/raulcabralc/financial-calc-br.git"
+  },
+  "bugs": {
+    "url": "https://github.com/raulcabralc/financial-calc-br/issues"
+  },
+  "homepage": "https://github.com/raulcabralc/financial-calc-br#readme",
+  "devDependencies": {
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
