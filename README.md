@@ -7,8 +7,16 @@ Uma calculadora financeira completa para o mercado brasileiro, incluindo cálcul
 
 ## 📦 Instalação
 
+### NPM
+
 ```bash
 npm install financial-calc-br
+```
+
+### Yarn
+
+```bash
+yarn add financial-calc-br
 ```
 
 ## 🚀 Uso Básico
@@ -208,7 +216,7 @@ Contribuições são bem-vindas! Veja [CONTRIBUTING.md](CONTRIBUTING.md) para de
 
 ## 🐛 Bugs e Sugestões
 
-Encontrou um bug ou tem uma sugestão? Abra uma [issue](https://github.com/raulcabralc/brazilian-financial-calc/issues).
+Encontrou um bug ou tem uma sugestão? Abra uma [issue](https://github.com/raulcabralc/financial-calc-br/issues).
 
 ## 📊 Roadmap
 
