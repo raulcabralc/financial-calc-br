@@ -1,0 +1,11 @@
+import { ValidationResultUtils, CompoundInterestResult, RateConversion } from "../types/types";
+declare function formatMoney(valor: number): string;
+declare function parseMoney(valor: number | string): number;
+declare function convertRate(taxa: number, de: RateConversion, para: RateConversion): number;
+declare function calcIRRate(dias: number): number;
+declare function isValidNumber(valor: any): valor is number;
+declare function validateFinancialParams(valor: number, taxa: number, tempo: number): ValidationResultUtils;
+declare function formatPeriod(meses: number): string;
+declare function calcPercentDifference(valor1: number, valor2: number): number;
+declare function compoundInterest(capital: number, taxaAnual: number, anos: number): CompoundInterestResult;
+export { formatMoney, parseMoney, convertRate, calcIRRate, isValidNumber, validateFinancialParams, formatPeriod, calcPercentDifference, compoundInterest, };
