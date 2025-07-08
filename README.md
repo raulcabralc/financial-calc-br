@@ -5,6 +5,11 @@
 
 Uma calculadora financeira completa para o mercado brasileiro, incluindo cálculos de financiamentos (SAC e Price), investimentos (CDB, Tesouro Selic, Poupança) e cartão de crédito rotativo.
 
+## 🔍 Veja esse projeto em Python
+
+[![PyPI version](https://img.shields.io/pypi/v/financial-calc-br)](https://pypi.org/project/financial-calc-br/)
+- GitHub: https://github.com/lucansdev/financial-calc-br
+
 ## 📦 Instalação
 
 ### NPM
