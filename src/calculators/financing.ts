@@ -18,10 +18,13 @@ import {
 } from "../types/types";
 
 class FinancingCalc {
-  /* ========================== */
-  /*   CÁLCULOS (SAC E PRICE)   */
-  /* ========================== */
-
+  /**
+   * Calcula financiamento usando o Sistema de Amortização Constante (SAC)
+   * @param {number} valor - Valor total a ser financiado
+   * @param {number} taxaAnual - Taxa de juros anual (em percentual)
+   * @param {number} anos - Prazo do financiamento em anos
+   * @returns {ResultadoSAC} Objeto com detalhes completos do financiamento SAC
+   */
   financingSAC(valor: number, taxaAnual: number, anos: number): ResultadoSAC {
     const validation: ValidationResult = validateFinancialParams(
       valor,
@@ -93,6 +96,13 @@ class FinancingCalc {
     };
   }
 
+  /**
+   * Calcula financiamento usando o Sistema Price (Tabela Price)
+   * @param {number} valor - Valor total a ser financiado
+   * @param {number} taxaAnual - Taxa de juros anual (em percentual)
+   * @param {number} anos - Prazo do financiamento em anos
+   * @returns {ResultadoPRICE} Objeto com detalhes completos do financiamento Price
+   */
   financingPrice(
     valor: number,
     taxaAnual: number,
@@ -169,10 +179,13 @@ class FinancingCalc {
     };
   }
 
-  /* ============================== */
-  /*     COMPARA OS DOIS MÉTODOS    */
-  /* ============================== */
-
+  /**
+   * Compara os sistemas de financiamento SAC e Price
+   * @param {number} valor - Valor total a ser financiado
+   * @param {number} taxaAnual - Taxa de juros anual (em percentual)
+   * @param {number} anos - Prazo do financiamento em anos
+   * @returns {ResultadoComparacao} Objeto com comparação detalhada entre SAC e Price
+   */
   compareFinancing(
     valor: number,
     taxaAnual: number,
@@ -236,10 +249,14 @@ class FinancingCalc {
     };
   }
 
-  /* ===================================== */
-  /*    RETORNA O MÉTODO MAIS ECONÔMICO    */
-  /* ===================================== */
-
+  /**
+   * Determina qual sistema de financiamento é mais recomendado
+   * @param {number} sacJuros - Total de juros do sistema SAC
+   * @param {number} priceJuros - Total de juros do sistema Price
+   * @param {number} primeiraSAC - Valor da primeira parcela SAC
+   * @param {number} parcelaPrice - Valor da parcela fixa Price
+   * @returns {Recomendacao} Objeto com recomendação do melhor sistema
+   */
   getRecommendation(
     sacJuros: number,
     priceJuros: number,
@@ -270,10 +287,14 @@ class FinancingCalc {
     }
   }
 
-  /* =============================================== */
-  /*    SIMULAÇÃO DE UM FINANCIAMENTO COM ENTRADA    */
-  /* =============================================== */
-
+  /**
+   * Simula um financiamento com entrada (down payment)
+   * @param {number} valorImovel - Valor total do imóvel
+   * @param {number} entrada - Valor da entrada
+   * @param {number} taxaAnual - Taxa de juros anual (em percentual)
+   * @param {number} anos - Prazo do financiamento em anos
+   * @returns {SimulacaoEntrada} Objeto com simulação completa incluindo entrada
+   */
   simulateDownPayment(
     valorImovel: number,
     entrada: number,

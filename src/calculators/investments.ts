@@ -27,10 +27,12 @@ class InvestmentCalc {
     this.rates = new RatesManager();
   }
 
-  /* ============== */
-  /*    POUPANÇA    */
-  /* ============== */
-
+  /**
+   * Calcula rendimento da poupança
+   * @param {number} valor - Valor inicial do investimento
+   * @param {number} meses - Período de investimento em meses
+   * @returns {ResultadoPoupanca} Objeto com detalhes do rendimento da poupança
+   */
   investmentPoupanca(valor: number, meses: number): ResultadoPoupanca {
     const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
@@ -66,10 +68,12 @@ class InvestmentCalc {
     };
   }
 
-  /* =================== */
-  /*    TESOURO SELIC    */
-  /* =================== */
-
+  /**
+   * Calcula rendimento do Tesouro Selic
+   * @param {number} valor - Valor inicial do investimento
+   * @param {number} meses - Período de investimento em meses
+   * @returns {ResultadoTesouroSelic} Objeto com detalhes do rendimento do Tesouro Selic
+   */
   investmentTesouroSelic(valor: number, meses: number): ResultadoTesouroSelic {
     const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
@@ -118,10 +122,13 @@ class InvestmentCalc {
     };
   }
 
-  /* ========= */
-  /*    CDB    */
-  /* ========= */
-
+  /**
+   * Calcula rendimento do CDB (Certificado de Depósito Bancário)
+   * @param {number} valor - Valor inicial do investimento
+   * @param {number} meses - Período de investimento em meses
+   * @param {number} percentualCDI - Percentual do CDI pago pelo CDB (padrão: 100%)
+   * @returns {ResultadoCDB} Objeto com detalhes do rendimento do CDB
+   */
   investmentCDB(
     valor: number,
     meses: number,
@@ -173,10 +180,13 @@ class InvestmentCalc {
     };
   }
 
-  /* ============================== */
-  /*    COMPARA OS INVESTIMENTOS    */
-  /* ============================== */
-
+  /**
+   * Compara diferentes opções de investimento
+   * @param {number} valor - Valor inicial do investimento
+   * @param {number} meses - Período de investimento em meses
+   * @param {number[]} opcoes - Array com percentuais de CDI para comparação (padrão: [100, 110, 120])
+   * @returns {ResultadoComparacaoInvestment} Objeto com comparação detalhada entre investimentos
+   */
   compareInvestments(
     valor: number,
     meses: number,
@@ -256,10 +266,15 @@ class InvestmentCalc {
     };
   }
 
-  /* ================================== */
-  /*    SIMULAÇÃO DE APORTES MENSAIS    */
-  /* ================================== */
-
+  /**
+   * Simula investimento com aportes mensais
+   * @param {number} valorInicial - Valor inicial do investimento
+   * @param {number} aporteMensal - Valor do aporte mensal
+   * @param {number} meses - Período total de investimento em meses
+   * @param {number} taxaAnual - Taxa de juros anual (em percentual)
+   * @param {boolean} temIR - Indica se há incidência de Imposto de Renda (padrão: true)
+   * @returns {SimulacaoAportes} Objeto com simulação completa dos aportes mensais
+   */
   simulateMonthlyContributions(
     valorInicial: number,
     aporteMensal: number,

@@ -2,6 +2,13 @@ import { formatMoney } from "../utils/utils";
 import { creditCardPaga, creditCard } from "../types/types";
 
 class creditCardCalc {
+  /**
+   * Calcula o valor do crédito rotativo do cartão de crédito
+   * @param {number} valorFatura - Valor total da fatura do cartão
+   * @param {number} valorPago - Valor efetivamente pago pelo usuário
+   * @param {number} taxaMensal - Taxa mensal de juros do rotativo (padrão: 15%)
+   * @returns {creditCard | creditCardPaga} Objeto com detalhes do rotativo ou confirmação de pagamento integral
+   */
   calcRotativo(
     valorFatura: number,
     valorPago: number,
