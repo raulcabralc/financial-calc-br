@@ -146,11 +146,11 @@ class RatesManager {
     return {
       ...this.rates,
       formatted: {
-        selic: `${this.rates.selic}% a.a.`,
+        selic: `${this.rates.selic.toFixed(2)}% a.a.`,
         cdi: `${this.rates.cdi.toFixed(2)}% a.a.`,
         poupanca: `${this.rates.poupanca.toFixed(2)}% a.m.`,
         dolar: `R$ ${this.rates.dolar.toFixed(2)}`,
-        ipca: `${this.rates.ipca}% a.a.`,
+        ipca: `${this.rates.ipca.toFixed(2)}% a.a.`,
       },
     };
   }
