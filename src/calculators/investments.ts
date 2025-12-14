@@ -21,10 +21,11 @@ import {
 import RatesManager from "../services/rates";
 
 class InvestmentCalc {
-  private rates: RatesManager;
+  constructor(private rates: RatesManager) {}
 
-  constructor() {
-    this.rates = new RatesManager();
+  static async create(): Promise<InvestmentCalc> {
+    const rates = await RatesManager.create();
+    return new InvestmentCalc(rates);
   }
 
   /**
