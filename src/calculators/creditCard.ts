@@ -1,7 +1,7 @@
 import { formatMoney } from "../utils/utils";
 import { creditCardPaga, creditCard } from "../types/types";
 
-class creditCardCalc {
+class CreditCardCalc {
   /**
    * Calcula o valor do crédito rotativo do cartão de crédito
    * @param {number} valorFatura - Valor total da fatura do cartão
@@ -26,6 +26,7 @@ class creditCardCalc {
     const juros = valorRotativo * (taxaMensal / 100);
     const iof = valorRotativo * 0.0038;
     const custoTotal = juros + iof;
+    const alerta = custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK";
 
     return {
       valorFatura: valorFatura,
@@ -35,7 +36,7 @@ class creditCardCalc {
       iof: iof,
       custoTotal: custoTotal,
       proximaFatura: valorRotativo + custoTotal,
-      alerta: custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK",
+      alerta,
       formatted: {
         valorFatura: formatMoney(valorFatura),
         valorPago: formatMoney(valorPago),
@@ -44,10 +45,10 @@ class creditCardCalc {
         iof: formatMoney(iof),
         custoTotal: formatMoney(custoTotal),
         proximaFatura: formatMoney(valorRotativo + custoTotal),
-        alerta: custoTotal > valorRotativo * 0.1 ? "Custo alto" : "Custo OK",
+        alerta,
       },
     };
   }
 }
 
-export default creditCardCalc;
+export default CreditCardCalc;
