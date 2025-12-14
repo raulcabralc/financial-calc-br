@@ -8,6 +8,7 @@ Uma calculadora financeira completa para o mercado brasileiro, incluindo cálcul
 ## 🔍 Veja esse projeto em Python
 
 [![PyPI version](https://img.shields.io/pypi/v/financial-calc-br)](https://pypi.org/project/financial-calc-br/)
+
 - GitHub: https://github.com/lucansdev/financial-calc-br
 
 ## 📦 Instalação
@@ -25,6 +26,8 @@ yarn add financial-calc-br
 ```
 
 ## 🚀 Uso Básico
+
+⚠️ **Importante**: `InvestmentCalc` e `RatesManager` usam Factory Pattern para garantir taxas atualizadas do Banco Central. Use `await ClassName.create()` em vez de `new ClassName()`.
 
 ### Calculadora de Financiamentos
 
@@ -51,7 +54,7 @@ console.log(comparacao.comparacao.recomendacao);
 ```typescript
 import { InvestmentCalc } from "financial-calc-br";
 
-const calc = new InvestmentCalc();
+const calc = await InvestmentCalc.create();
 
 // Calcular rendimento da poupança
 const poupanca = calc.investmentPoupanca(10000, 12);
@@ -79,15 +82,39 @@ console.log(rotativo.formatted.custoTotal); // "R$ 107,66"
 console.log(rotativo.alerta); // "Custo alto"
 ```
 
+### Gerenciador de Taxas
+
+```typescript
+import { RatesManager } from "financial-calc-br";
+
+const rates = await RatesManager.create();
+
+// Obter taxas atualizadas
+console.log(rates.getSelic()); // 11.25
+console.log(rates.getCDI()); // 10.13
+console.log(rates.getPoupanca()); // 0.5
+
+// Obter todas as taxas formatadas
+const allRates = rates.getAllRates();
+console.log(allRates.formatted.selic); // "11.25% a.a."
+console.log(allRates.formatted.cdi); // "10.13% a.a."
+console.log(allRates.formatted.poupanca); // "0.50% a.m."
+
+// Atualizar taxas manualmente
+await rates.updateAll();
+```
+
 ## 📊 Funcionalidades
 
 ### 🏠 Financiamentos
+
 - **Sistema SAC**: Parcelas decrescentes, menor custo total
 - **Sistema Price**: Parcelas fixas, facilita planejamento
 - **Comparação**: Análise automática dos dois sistemas
 - **Simulação de entrada**: Calcule diferentes cenários de entrada
 
 ### 💰 Investimentos
+
 - **Poupança**: Cálculo com regras atuais (isento de IR)
 - **Tesouro Selic**: Com tributação regressiva
 - **CDB**: Diversos percentuais do CDI
@@ -95,6 +122,7 @@ console.log(rotativo.alerta); // "Custo alto"
 - **Taxas atualizadas**: Busca automática de taxas Selic e CDI
 
 ### 💳 Cartão de Crédito
+
 - **Rotativo**: Cálculo de juros e IOF
 - **Alertas**: Identifica custos altos automaticamente
 - **Próxima fatura**: Projeção do valor da próxima fatura
@@ -163,7 +191,12 @@ getAllRates(): AllRates
 ## 🔧 Utilitários
 
 ```typescript
-import { formatMoney, parseMoney, convertRate, calcIRRate } from "financial-calc-br";
+import {
+  formatMoney,
+  parseMoney,
+  convertRate,
+  calcIRRate,
+} from "financial-calc-br";
 
 // Formatação
 formatMoney(1234.56); // "R$ 1.234,56"
@@ -188,14 +221,16 @@ const resultado = calc.compareFinancing(500000, 11.5, 30);
 
 console.log(`SAC - Primeira parcela: ${resultado.sac.primeira}`);
 console.log(`Price - Parcela fixa: ${resultado.price.parcelaFixa}`);
-console.log(`Economia escolhendo SAC: ${resultado.comparacao.formatted.economia}`);
+console.log(
+  `Economia escolhendo SAC: ${resultado.comparacao.formatted.economia}`
+);
 console.log(`Recomendação: ${resultado.comparacao.recomendacao.sistema}`);
 ```
 
 ### Simulando Investimento com Aportes
 
 ```typescript
-const calc = new InvestmentCalc();
+const calc = await InvestmentCalc.create();
 const simulacao = calc.simulateMonthlyContributions(10000, 1000, 24, 12);
 
 console.log(`Total aportado: ${simulacao.formatted.totalAportado}`);
