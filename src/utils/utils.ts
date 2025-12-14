@@ -106,6 +106,10 @@ function validateFinancialParams(
  * @returns {string} Período formatado (ex: "2 anos e 3 meses")
  */
 function formatPeriod(meses: number): string {
+  if (!isValidNumber(meses) || meses < 0) {
+    throw new Error("Número de meses deve ser um número positivo");
+  }
+
   if (meses < 12) {
     return `${meses} ${meses === 1 ? "mês" : "meses"}`;
   }
@@ -147,6 +151,11 @@ function compoundInterest(
   taxaAnual: number,
   anos: number
 ): CompoundInterestResult {
+  const validation = validateFinancialParams(capital, taxaAnual, anos);
+  if (!validation.isValid) {
+    throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+  }
+
   const parcelas = anos * 12;
   const taxaMensal = convertRate(taxaAnual, "anual", "mensal");
 
@@ -154,7 +163,7 @@ function compoundInterest(
   return {
     capital: capital,
     taxa: taxaMensal,
-    periodo: formatPeriod(anos),
+    periodo: formatPeriod(anos * 12),
     montante: Math.round(montante * 100) / 100,
     juros: Math.round((montante - capital) * 100) / 100,
   };
