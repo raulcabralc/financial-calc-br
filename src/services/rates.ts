@@ -20,6 +20,12 @@ class RatesManager {
     };
   }
 
+  static async create(): Promise<RatesManager> {
+    const rates = new RatesManager();
+    await rates.updateAll();
+    return rates;
+  }
+
   async updateAll(): Promise<Rates> {
     try {
       const selic = await this.fetchSelic();
@@ -110,7 +116,7 @@ class RatesManager {
 
   private updateSavingsRule(): void {
     if (this.rates.selic <= 8.5) {
-      this.rates.poupanca = (this.rates.selic / 12) * 0.7;
+      this.rates.poupanca = (this.rates.selic * 0.7) / 12;
     } else {
       this.rates.poupanca = 0.5;
     }
