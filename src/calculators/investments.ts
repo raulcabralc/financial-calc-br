@@ -44,7 +44,8 @@ class InvestmentCalc {
       throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
     }
 
-    const taxaMensal: number = this.rates.getPoupanca() / 100;
+    const taxaPoupanca: number = this.rates.getPoupanca();
+    const taxaMensal: number = taxaPoupanca / 100;
     const montante: number = valor * Math.pow(1 + taxaMensal, meses);
     const rendimento: number = montante - valor;
 
@@ -52,7 +53,7 @@ class InvestmentCalc {
       investimento: "Poupança",
       valorInicial: valor,
       periodo: meses,
-      taxaMensal: this.rates.getPoupanca() / 100,
+      taxaMensal: taxaPoupanca / 100,
       montanteFinal: montante,
       rendimento: rendimento,
       rentabilidade: rendimento / valor,
@@ -61,7 +62,7 @@ class InvestmentCalc {
       formatted: {
         valorInicial: formatMoney(valor),
         periodo: formatPeriod(meses),
-        taxaMensal: `${this.rates.getPoupanca().toFixed(2)}%`,
+        taxaMensal: `${taxaPoupanca.toFixed(2)}%`,
         montanteFinal: formatMoney(montante),
         rendimento: formatMoney(rendimento),
         rentabilidade: `${((rendimento / valor) * 100).toFixed(2)}%`,
@@ -90,7 +91,7 @@ class InvestmentCalc {
     const montanteBruto: number = valor * Math.pow(1 + taxaMensal, meses);
     const rendimentoBruto: number = montanteBruto - valor;
 
-    const dias: number = meses * 30;
+    const dias: number = Math.round(meses * 30.44);
     const aliquotaIR: number = calcIRRate(dias);
     const ir: number = rendimentoBruto * (aliquotaIR / 100);
     const rendimentoLiquido: number = rendimentoBruto - ir;
@@ -135,21 +136,22 @@ class InvestmentCalc {
     meses: number,
     percentualCDI: number = 100
   ): ResultadoCDB {
+    const taxaCDI = this.rates.getCDI() * (percentualCDI / 100);
+
     const validation: ValidationResultInvestment = validateFinancialParams(
       valor,
-      percentualCDI,
+      taxaCDI,
       meses
     );
     if (!validation.isValid) {
       throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
     }
 
-    const taxaCDI: number = this.rates.getCDI() * (percentualCDI / 100);
     const taxaMensal: number = convertRate(taxaCDI, "anual", "mensal") / 100;
     const montanteBruto: number = valor * Math.pow(1 + taxaMensal, meses);
     const rendimentoBruto: number = montanteBruto - valor;
 
-    const dias: number = meses * 30;
+    const dias: number = Math.round(meses * 30.44);
     const aliquotaIR: number = calcIRRate(dias);
     const ir: number = rendimentoBruto * (aliquotaIR / 100);
     const rendimentoLiquido: number = rendimentoBruto - ir;
