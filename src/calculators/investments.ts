@@ -201,11 +201,11 @@ class InvestmentCalc {
       this.investmentCDB(valor, meses, perc)
     );
 
-    const rendPoupanca: number = parseMoney(poupanca.rendimento);
-    const rendSelic: number = parseMoney(selic.rendimentoLiquido);
+    const rendPoupanca: number = poupanca.rendimento;
+    const rendSelic: number = selic.rendimentoLiquido;
     const rendCDBs: OpcaoInvestimento[] = cdbs.map((cdb) => ({
       nome: cdb.investimento,
-      rendimento: parseMoney(cdb.rendimentoLiquido),
+      rendimento: cdb.rendimentoLiquido,
       rentabilidade: cdb.rentabilidade,
     }));
 
@@ -299,10 +299,8 @@ class InvestmentCalc {
     for (let mes = 1; mes <= meses; mes++) {
       montante = montante * (1 + taxaMensal);
 
-      if (mes <= meses) {
-        montante += aporteMensal;
-        totalAportado += aporteMensal;
-      }
+      montante += aporteMensal;
+      totalAportado += aporteMensal;
 
       if (mes <= 12 || mes % 12 === 0 || mes === meses) {
         evolucao.push({
@@ -349,7 +347,10 @@ class InvestmentCalc {
         impostoRenda: temIR ? formatMoney(ir) : formatMoney(0),
         montanteLiquido: formatMoney(montante - (temIR ? ir : 0)),
         rendimentoLiquido: formatMoney(rendimentoLiquido),
-        rentabilidadeTotal: formatMoney(rendimentoLiquido / totalAportado),
+        rentabilidadeTotal: `${(
+          (rendimentoLiquido / totalAportado) *
+          100
+        ).toFixed(2)}%`,
       },
     };
   }
