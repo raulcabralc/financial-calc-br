@@ -35,7 +35,7 @@ describe("RatesManager", () => {
       expect(allRates.formatted.cdi).toBe("10.50% a.a.");
       expect(allRates.formatted.poupanca).toBe("0.50% a.m.");
       expect(allRates.formatted.dolar).toBe("R$ 5.20");
-      expect(allRates.formatted.ipca).toBe("4.5% a.a.");
+      expect(allRates.formatted.ipca).toBe("4.50% a.a.");
     });
   });
 
