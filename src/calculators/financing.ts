@@ -36,7 +36,7 @@ class FinancingCalc {
     }
 
     const parcelas: number = anos * 12;
-    const taxaMensal: number = convertRate(taxaAnual, "anual", "mensal");
+    const taxaMensal: number = convertRate(taxaAnual, "anual", "mensal") / 100;
     const amortizacao: number = valor / parcelas;
 
     let saldoDevedor: number = valor;
@@ -45,7 +45,7 @@ class FinancingCalc {
     const ultimos12: ParcelaDetalhes[] = [];
 
     for (let i = 1; i <= parcelas; i++) {
-      const juros: number = saldoDevedor * (taxaMensal / 100);
+      const juros: number = saldoDevedor * taxaMensal;
       const prestacao: number = amortizacao + juros;
       saldoDevedor = Math.max(0, saldoDevedor - amortizacao);
       totalJuros += juros;
@@ -75,8 +75,8 @@ class FinancingCalc {
       taxa: taxaAnual / 100,
       totalJuros: totalJuros,
       totalPago: valor + totalJuros,
-      primeiraParcela: amortizacao + (valor * taxaMensal) / 100,
-      ultimaParcela: amortizacao + (amortizacao * taxaMensal) / 100,
+      primeiraParcela: amortizacao + valor * taxaMensal,
+      ultimaParcela: amortizacao + amortizacao * taxaMensal,
       resumo: {
         primeiros12,
         ultimos12,
@@ -88,10 +88,8 @@ class FinancingCalc {
         taxa: `${taxaAnual}% a.a.`,
         totalJuros: formatMoney(totalJuros),
         totalPago: formatMoney(valor + totalJuros),
-        primeiraParcela: formatMoney(amortizacao + (valor * taxaMensal) / 100),
-        ultimaParcela: formatMoney(
-          amortizacao + (amortizacao * taxaMensal) / 100
-        ),
+        primeiraParcela: formatMoney(amortizacao + valor * taxaMensal),
+        ultimaParcela: formatMoney(amortizacao + amortizacao * taxaMensal),
       },
     };
   }
@@ -203,8 +201,8 @@ class FinancingCalc {
     const sac: ResultadoSAC = this.financingSAC(valor, taxaAnual, anos);
     const price: ResultadoPRICE = this.financingPrice(valor, taxaAnual, anos);
 
-    const sacJuros: number = parseMoney(sac.totalJuros);
-    const priceJuros: number = parseMoney(price.totalJuros);
+    const sacJuros: number = sac.totalJuros;
+    const priceJuros: number = price.totalJuros;
     const economia: number = priceJuros - sacJuros;
 
     return {
@@ -238,8 +236,8 @@ class FinancingCalc {
         recomendacao: this.getRecommendation(
           sacJuros,
           priceJuros,
-          parseMoney(sac.primeiraParcela),
-          parseMoney(price.prestacaoFixa)
+          sac.primeiraParcela,
+          price.prestacaoFixa
         ),
         formatted: {
           economia: formatMoney(economia),
@@ -277,12 +275,14 @@ class FinancingCalc {
     } else if (diferencaParcela > 30) {
       return {
         sistema: "Price",
-        motivo: "Primera parcela SAC muito alta, pode comprometer orçamento",
+        motivo: "Primeira parcela SAC muito alta, pode comprometer orçamento",
       };
     } else {
       return {
         sistema: "SAC",
-        motivo: `Economia significativa de ${priceJuros - sacJuros}`,
+        motivo: `Economia significativa de ${formatMoney(
+          priceJuros - sacJuros
+        )}`,
       };
     }
   }
@@ -301,6 +301,25 @@ class FinancingCalc {
     taxaAnual: number,
     anos: number
   ): SimulacaoEntrada {
+    if (valorImovel <= 0) {
+      throw new Error("Valor do imóvel deve ser positivo");
+    }
+    if (entrada < 0) {
+      throw new Error("Entrada não pode ser negativa");
+    }
+    if (entrada >= valorImovel) {
+      throw new Error("Entrada não pode ser maior ou igual ao valor do imóvel");
+    }
+
+    const validation: ValidationResult = validateFinancialParams(
+      valorImovel - entrada,
+      taxaAnual,
+      anos
+    );
+    if (!validation.isValid) {
+      throw new Error(`Parâmetros inválidos: ${validation.errors.join(", ")}`);
+    }
+
     const valorFinanciado: number = valorImovel - entrada;
     const result: ResultadoComparacao = this.compareFinancing(
       valorFinanciado,
